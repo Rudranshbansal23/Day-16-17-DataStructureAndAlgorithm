@@ -1,0 +1,140 @@
+package com.bridgelabz.DSA;
+
+import java.util.Scanner;
+
+public class BalancedParenthisis<T> 
+{
+	class Node
+	{
+		Object data;
+		Node next;
+		
+		public Node(Object data)
+		{
+			this.data=data;
+		}
+	}
+	
+	
+	 Node head;
+	
+	/* Method to add new-node at the end of Linked List*/
+	boolean addLast(Object obj)
+	{
+		Node n=new Node(obj); //Creating new-node with given data
+	
+		if(head==null)
+		{
+			head=n;    //head null so add new-node as first-node 
+			System.out.println("Pushed: "+n.data);
+			System.out.println();
+			return true;
+		}
+		
+		Node t=head;
+		
+		while(t.next!=null)
+		{
+			t=t.next;  //Traversing linked-list till end
+		}
+		t.next=n;     // adding new-node at end of linked-list 
+		System.out.println("Pushed: "+n.data);
+		System.out.println();
+		return true;
+	}
+	
+	
+	boolean deleteLast(char bracket)
+	{
+		char toBePopped=0;
+	
+		switch (bracket) 
+		{
+
+			case ')':
+				toBePopped = '(';
+				break;
+	
+			case ']':
+				toBePopped = '[';
+				break;
+	
+			case '}':
+				toBePopped = '{';
+		}
+		
+		System.out.println("To be popped: "+toBePopped);
+		Node t=head;
+		
+		if(t==null)
+		{
+			System.out.println("Stack empty");  //head null so linked-list has no data
+			System.out.println();
+			return false;
+		}
+		
+		if(t.next==null && (char)t.data==toBePopped)
+		{
+			System.out.println("Popped: "+t.data);  //head.next=null means only one element exist so remove it
+			System.out.println();
+			head=null;
+			return true;
+		}
+		else if( t.next==null && (char)t.data!=toBePopped)
+		{
+			return false;
+		}
+		
+		while(t.next.next!=null)
+		{
+			t=t.next;    
+		}
+		
+		if((char)t.data==toBePopped)
+		{
+			System.out.println("popped: "+t.data);
+			t.next=null;    //Removing last node
+			return true;
+		}
+		
+			return false;
+	}
+	
+	public static void main(String[] args) 
+	{
+		BalancedParenthisis<Character>  stack=new BalancedParenthisis<Character> ();
+		@SuppressWarnings("resource")
+		Scanner scanner=new Scanner(System.in);
+		System.out.println("Enter the expression to check if balanced: ");
+		String exp=scanner.nextLine();
+		//String exp="(5+6)∗(7+8)/(4+3)(5+6)∗(7+8)/(4+3)";
+		char re[]=exp.toCharArray();
+		
+		for (int i = 0; i < re.length; i++)
+		{
+			if(re[i]=='(' || re[i]=='[' || re[i]=='{')
+				stack.addLast(re[i]);  //pushing "("  or "[" or "{" to stack
+			else
+				if(re[i]==')' || re[i]==']' || re[i]=='}')
+				{
+					char bracket=re[i];
+					System.out.println("Found "+re[i]);
+					System.out.println();
+					
+					boolean pop=stack.deleteLast(bracket);	 //Popping ")" from stack
+					
+					if(!pop) //If no element to pop i.e no "(" or '[' or '{' in stack
+					{
+						System.out.println("Expression Not Balanced:::::::::::");
+						return;
+					}
+				}
+		}
+		
+		if(stack.head==null) //Matched ")" for every "("
+			System.out.println("Expression Balanced with parenthisis");
+		else
+			System.out.println("Expression Not Balanced");
+		
+	}
+}
